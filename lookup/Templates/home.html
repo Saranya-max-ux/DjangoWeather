@@ -1,9 +1,72 @@
- {% extends 'base.html' %}
-
+{% extends 'base.html' %}
 {% block content %}
 
-<h1> Heloooo!!!! </h1>
+<div class="container text-center mt-5">
+
+    <!-- 🌤️ Heading -->
+    <h1 class="display-5 fw-bold text-pink mb-3">
+        Curious about today’s skies? ☁️
+    </h1>
+
+    <p class="lead text-secondary mb-2" style="font-size: 1.6rem;">
+        🌞⛅🌦🌧⛈🌨🌫🌪🌙✨
+    </p>
+    <p class="text-muted mb-5"><strong>Let’s see what the skies say today!</strong></p>
+
+    <!-- 🔍 Search Form -->
+    <form method="POST" class="d-flex justify-content-center flex-wrap gap-3">
+        {% csrf_token %}
+        <input type="text" name="city" class="form-control rounded-pill shadow-sm text-center"
+               placeholder="Enter city name 🌍" style="max-width: 350px;" required>
+        <button type="submit" class="btn btn-primary rounded-pill px-4 fw-semibold shadow">
+            Search 🔍
+        </button>
+    </form>
+
+    <br/>
+
+    <!-- ⚠️ Error -->
+    {% if api == "Error......" %}
+    <div class="alert alert-danger mt-4 shadow-sm">
+        ❌ Could not fetch weather data. Please try again!
+    </div>
+
+    <!-- 🌦️ Weather Info -->
+    {% elif api %}
+    <div class="weather-card mt-5 p-4 rounded-4 shadow-lg mx-auto" 
+         style="max-width: 450px; background-color: #e3f2fd;">
+        <h3 class="fw-bold mb-3 text-dark">{{ api.name }}</h3>
+        <img src="https://openweathermap.org/img/wn/{{ api.weather.0.icon }}@2x.png" 
+             alt="icon" class="mb-3" style="width: 90px; height: 90px;">
+        <h4 class="text-primary fw-semibold mb-2 text-capitalize">{{ api.weather.0.description }}</h4>
+
+        <div class="text-start ps-4">
+            <p><strong>🌡️ Temperature:</strong> {{ api.main.temp }}°C</p>
+            <p><strong>🤗 Feels Like:</strong> {{ api.main.feels_like }}°C</p>
+            <p><strong>💧 Humidity:</strong> {{ api.main.humidity }}%</p>
+            <p><strong>🌬️ Wind Speed:</strong> {{ api.wind.speed }} m/s</p>
+            <p><strong>📊 Pressure:</strong> {{ api.main.pressure }} hPa</p>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<!-- 🌈 Styling -->
+<style>
+.text-pink {
+  background: linear-gradient(90deg, #ff007f, #ff66b2, #ff99cc);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.weather-card {
+  transition: all 0.3s ease;
+  border: 1px solid rgba(173, 216, 230, 0.5);
+}
+.weather-card:hover {
+  transform: scale(1.04);
+  box-shadow: 0 0 25px rgba(33, 150, 243, 0.3);
+}
+</style>
 
 {% endblock %}
- 
-
